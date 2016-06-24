@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  .margintop
+    .uploadpage-header.center
+      h3 Upload image
+      img( src="../blue.png", class='profile' id= "uploadImg", width='400', height='400')
+      form(method='post', enctype='multipart/form-data', action='/upload')
+      input(type='file', name='file')
+      input(type='submit', value='Submit')
+      input.form-control.center(type='tags', name='tags', id='tags', placeholder="Add Tags...")
+script.
+  $(function () {
+  console.log("hello");
+    $(":file").change(function () {
+
+        if (this.files && this.files[0]) {
+          var reader = new FileReader();
+           reader.onload = imageIsLoaded;
+          reader.readAsDataURL(this.files[0]);
+        }
+    });
+  });
+
+  function imageIsLoaded(e) {
+    $('#uploadImg').attr('src', e.target.result);
+  };
+

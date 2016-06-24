@@ -1,0 +1,64 @@
+extends ../layout
+
+block content
+  .profile-page
+    .row
+      .col-sm-3
+        img( src="../noavatar.jpg",class="circle" ,width='200', height='200')
+      .col-sm-5
+        h3 Name
+        h4.bio bio
+      .col-sm-4
+        h4 where you from
+
+    section
+      section.regular
+        div
+          img(src='http://placehold.it/350x300?text=1')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=2')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=3')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=4')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=5')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=6')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=7')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=8')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=9')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=10')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=11')
+          img(src='http://placehold.it/350x300?text=2')
+        div
+          img(src='http://placehold.it/350x300?text=12')
+          img(src='http://placehold.it/350x300?text=2')
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyD634lk0BbZqVzKG4Vdt6R5e5K9Ua5xxdY', async='', defer='')
+
+  script.
+    $(function () {
+
+      $(".regular").slick({
+        dots: true,
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 3
+      });
+    });
+

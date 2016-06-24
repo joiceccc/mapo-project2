@@ -1,0 +1,49 @@
+extends ../layout
+
+block content
+  header
+    section
+      h1.center search tags
+      input#search-bar.form-control.center(type='keywords', placeholder='Add tags...')
+    table.table
+        tr
+          section.regular
+            div
+              img(src='http://placehold.it/350x300?text=1')
+            div
+              img(src='http://placehold.it/350x300?text=2')
+            div
+              img(src='http://placehold.it/350x300?text=3')
+            div
+              img(src='http://placehold.it/350x300?text=4')
+
+        tr
+          section.regular
+            div
+              img(src='http://placehold.it/350x300?text=1')
+            div
+              img(src='http://placehold.it/350x300?text=2')
+            div
+              img(src='http://placehold.it/350x300?text=3')
+            div
+              img(src='http://placehold.it/350x300?text=4')
+        tr
+          td Mary
+          td Moe
+          td mary@example.com
+        tr
+          td July
+          td Dooley
+          td july@example.com
+
+
+  script.
+    $(function () {
+
+      $(".regular").slick({
+        dots: true,
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 3
+      });
+    });

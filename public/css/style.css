@@ -1,0 +1,72 @@
+header.main {
+  height: 600px;
+  width: 100%;
+}
+
+section.main-content {
+
+  margin-top: 100px;
+  left: 35%;
+
+
+}
+
+.row.categories{
+  width: 950px;
+  margin: auto;
+}
+
+.center {
+  text-align: center;
+
+}
+
+#search-bar {
+  width: 300px;
+  margin-left : 36%;
+}
+
+section.cate-type {
+  left: 10%;
+}
+
+.circle {
+  border-radius: 100%;
+}
+
+.profile-page {
+  width: 950px;
+  margin-left: 10%;
+  margin-top: 100px;
+}
+.bio {
+  margin-top: 30px;
+  margin-left: 200px;
+}
+
+* {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+   font-weight: 300;
+}
+
+body {
+   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+   font-weight: 300;
+}
+
+.uploadpage-header {
+  top: 70px;
+  margin: auto;
+  width: 500px
+
+
+}
+
+.margintop  {
+  margin-top: 50px;
+}
+
+.mapo-home-img {
+position: relative;
+left: 40%;
+}

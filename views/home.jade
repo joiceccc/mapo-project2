@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  header.main
+    section.main-content
+      img( src="../mapo plain.png",class="mapo-home-img" , width='200', height='200')
+      h1.center MAPO
+      p.lead.center Discover your local area.
+      input#search-bar.form-control.center(type='keywords', placeholder='Add tags...')
+
+  section.cate-type
+    .row.categories
+      .col-md-4.col-sm-6
+        img( src="../arty.jpg", width='300', height='300')
+        h5.center ART
+
+      .col-md-4.col-sm-6
+        img( src="../greenspace newcatttttt.jpg", width='300', height='300')
+        h5.center GREENSPACE
+      .col-md-4.col-sm-6
+        img( src="../outfitss.jpg", width='300', height='300')
+        h5.center OUTFIT
+    .row.categories
+      .col-md-4.col-sm-6
+        img( src="../chill catttt.jpg", width='300', height='300')
+        h5.center CHILL
+
+      .col-md-4.col-sm-6
+        img( src="../outfit catttt.jpg", width='300', height='300')
+        h5.center AACESSORIES
+      .col-md-4.col-sm-6
+        img( src="../learn.jpg", width='300', height='300')
+        h5.center CLASSES
