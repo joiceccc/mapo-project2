@@ -4,25 +4,64 @@ block content
   .margintop
     .uploadpage-header.center
       h3 Upload image
-      img( src="../blue.png", class='profile' id= "uploadImg", width='400', height='400')
-      form(method='post', enctype='multipart/form-data', action='/upload')
-      input(type='file', name='file')
-      input(type='submit', value='Submit')
-      input.form-control.center(type='tags', name='tags', id='tags', placeholder="Add Tags...")
-script.
-  $(function () {
-  console.log("hello");
-    $(":file").change(function () {
+      tbody
+      form.form-horizontal.center(action='/upload/image', method='POST', enctype='multipart/form-data').center
+        .form-group
+          img( src="../blue.png", class='prof.centerile' id= "uploadimage", width='400', height='400')
+          form(method='post', enctype='multipart/form-data', action='/upload')
+          input(type='file', name='photo')
+          .dropdown
+            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+              | Categories
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href='#') Art
+              li
+                a(href='#') Green Space
+              li
+                a(href='#') Outfit
+          input.form-control.center(type='tags', name='tags', id='tags', placeholder="etc cafe , greenspace, coffee...")
+          input.form-control.center(type='showntags', name='showntags', id='showntags', placeholder="" )
+          section
+          button.btn.btn.btn-primary(id = 'addTags')
+            | Add Tags
+          button.btn.btn.btn-primary(type='submit', id = 'photoupload')
+            | Upload Photo
 
-        if (this.files && this.files[0]) {
-          var reader = new FileReader();
-           reader.onload = imageIsLoaded;
-          reader.readAsDataURL(this.files[0]);
-        }
+
+  script.
+    var tags = []
+    $(function () {
+
+
+    console.log("hello");
+      $(":file").change(function () {
+
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+             reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
+          }
+      });
     });
-  });
 
-  function imageIsLoaded(e) {
-    $('#uploadImg').attr('src', e.target.result);
-  };
+    function imageIsLoaded(e) {
+      $('#uploadimage').attr('src', e.target.result);
+    };
 
+    $('#addTags').click(function(e){
+      console.log('add tags');
+      e.preventDefault();
+
+      console.log($('#tags').val());
+
+      tags.push($('#tags').val());
+
+       var tagslabel = "<p class='roundtags'> "+$('#tags').val() + "</p>"
+      $('section').append(tagslabel);
+      $('#tags').val("");
+
+      console.log(tags);
+      $('#showntags').val(tags);
+    });

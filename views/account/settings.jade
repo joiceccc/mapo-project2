@@ -5,7 +5,7 @@ block content
     h3 Profile Information
 
   form.form-horizontal(action='/account/profile', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
+    input( name='_csrf', value=_csrf)
     .form-group
       label.col-sm-3.control-label(for='email') Email
       .col-sm-7
@@ -13,42 +13,55 @@ block content
     .form-group
       label.col-sm-3.control-label(for='name') Name
       .col-sm-7
-        input.form-control(type='text', name='name', id='name', value='#{user.profile.name}')
+        input.form-control(type='text', name='name', id='name', value='#{user.profile.appearname}')
     .form-group
-      label.col-sm-3.control-label(for='gender') Gender
+      label.col-sm-3.control-label(for='gender') Type of provider
       .col-sm-6
         label.radio.col-sm-3
-          input(type='radio', checked=user.profile.gender=='male', name='gender', value='male', data-toggle='radio')
-          span Male
+          input(type='radio', checked=user.profile.type=='grounds', name='type', value='grounds', data-toggle='radio')
+          span Grounds
         label.radio.col-sm-3
-          input(type='radio', checked=user.profile.gender=='female', name='gender', value='female', data-toggle='radio')
-          span Female
+          input(type='radio', checked=user.profile.gender=='upstairs', name='type', value='upstairs', data-toggle='radio')
+          span Upstairs
         label.radio.col-sm-3
-          input(type='radio', checked=user.profile.gender=='other', name='gender', value='other', data-toggle='radio')
-          span Other
+          input(type='radio', checked=user.profile.gender=='individual', name='individual', value='individual', data-toggle='radio')
+          span Individual
     .form-group
-      label.col-sm-3.control-label(for='location') Location
+      label.col-sm-3.control-label(for='location') District
       .col-sm-7
         input.form-control(type='text', name='location', id='location', value='#{user.profile.location}')
     .form-group
-      label.col-sm-3.control-label(for='website') Website
+      label.col-sm-3.control-label(for='bio') Short Bio
       .col-sm-7
-        input.form-control(type='text', name='website', id='website', value='#{user.profile.website}')
+        input.form-control(type='text', name='bio', id='bio', value='#{user.profile.bio}')
     .form-group
-      label.col-sm-3.control-label(for='gravatar') Profile Photo
-      .col-sm-4
-        img( src="../noavatar.jpg", class='profile' id= "myImg", width='100', height='100')
-        form(method='post', enctype='multipart/form-data', action='/upload')
-        input(type='file', name='file')
-        input(type='submit', value='Submit')
+      label.col-sm-3.control-label(for='categories') Categories
+      .col-sm-7
+        input.form-control(type='text', name='categories', id='categories', value='#{user.profile.categories}')
     .form-group
-      .col-sm-offset-3.col-sm-4
-        button.btn.btn.btn-primary(type='submit')
-          i.fa.fa-pencil
-          | Update Profile
+        .col-sm-offset-3.col-sm-4
+          button.btn.btn.btn-primary(type='submit')
+            i.fa.fa-pencil
+            | Update Profile
   .page-header
+    h3 Upload Profile Photo
+  form.form-horizontal(action='/account/profileimage', method='POST', enctype='multipart/form-data')
+    .form-group
+      label.col-sm-3.control-label(for='profileimage') Profile Photo
+      .col-sm-4
+        img( src="../noavatar.jpg", name = 'profileimage', class='profileimage' id= "myImg", width='200', height='200')
+        input(type='file', name='avatar')
+        button.btn.btn.btn-primary(type='submit')
+          | Upload Profile Image
+
   .page-header
     h3 Set location
+    input#pac-input.controls(type='text', placeholder='Enter a location')
+    #type-selector.controls
+    #map
+    button.btn.btn.btn-primary.updateLocation(type='submit')
+        | Edit Your Location
+
   .page-header
     h3 Change Password
 
@@ -117,8 +130,16 @@ block content
 
   script.
     console.log("hello");
+    var lat = 0;
+    var long = 0;
+    var csrfToken = $("meta[name='csrf-token']").attr("content");
+
+
     $(function () {
+    console.log(csrfToken);
+
     console.log("hello");
+
       $(":file").change(function () {
 
           if (this.files && this.files[0]) {
@@ -132,4 +153,107 @@ block content
     function imageIsLoaded(e) {
       $('#myImg').attr('src', e.target.result);
     };
+
+
+    $('#profileimage').click(function(e){
+      console.log('change profileimage');
+      e.preventDefault();
+    });
+
+
+    $('.updateLocation').click(function(e){
+      console.log('change location');
+      e.preventDefault();
+      console.log(lat + "," + long)
+       $.post( '/account/location', {'lat': lat, 'long': long, '_csrf' : $("meta[name='csrf-token']").attr("content")}, function( data){
+          console.log("updated.")
+
+
+      }, "json");
+
+    });
+
+    //load and find photo
+
+
+
+
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: -33.8688, lng: 151.2195},
+      zoom: 13
+      });
+      var input = /** @type {!HTMLInputElement} */(
+      document.getElementById('pac-input'));
+      var types = document.getElementById('type-selector');
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.bindTo('bounds', map);
+      var infowindow = new google.maps.InfoWindow();
+      var marker = new google.maps.Marker({
+      map: map,
+      anchorPoint: new google.maps.Point(0, -29)
+      });
+      autocomplete.addListener('place_changed', function() {
+      infowindow.close();
+      marker.setVisible(false);
+      var place = autocomplete.getPlace();
+      if (!place.geometry) {
+      window.alert("Autocomplete's returned place contains no geometry");
+      return;
+      }
+      // If the place has a geometry, then present it on a map.
+      if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+      } else {
+      map.setCenter(place.geometry.location);
+       lat = place.geometry.location.lat();
+       long = place.geometry.location.lng();
+       ////////////////////////////getttt api ////////////////////////////////////////
+        $.getJSON("http://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+ lat+"&sensor=true",
+     function(data){
+       console.log(data);
+     })
+        /////////////////////////////////////////////////////////////////////////////////////////
+      console.log(lat + "," + long)
+      map.setZoom(17);  // Why 17? Because it looks good.
+      }
+      marker.setIcon(/** @type {google.maps.Icon} */({
+      url: place.icon,
+      size: new google.maps.Size(71, 71),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(17, 34),
+      scaledSize: new google.maps.Size(35, 35)
+      }));
+      marker.setPosition(place.geometry.location);
+      marker.setVisible(true);
+      var address = '';
+      if (place.address_components) {
+      address = [
+      (place.address_components[0] && place.address_components[0].short_name || ''),
+      (place.address_components[1] && place.address_components[1].short_name || ''),
+      (place.address_components[2] && place.address_components[2].short_name || '')
+      ].join(' ');
+      }
+      infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+
+      infowindow.open(map, marker);
+      });
+      // Sets a listener on a radio button to change the filter type on Places
+      // Autocomplete.
+      function setupClickListener(id, types) {
+      var radioButton = document.getElementById(id);
+      //- radioButton.addEventListener('click', function() {
+      //- autocomplete.setTypes(types);
+      //- });
+      }
+      setupClickListener('changetype-all', []);
+      setupClickListener('changetype-address', ['address']);
+      setupClickListener('changetype-establishment', ['establishment']);
+      setupClickListener('changetype-geocode', ['geocode']);
+      }
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyB1_QSC1MHBWdON8G3NICbfuaMXpM1RsNM&libraries=places&callback=initMap', async='', defer='')
+
+
 

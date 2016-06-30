@@ -18,11 +18,23 @@ const userSchema = new mongoose.Schema({
   tokens: Array,
 
   profile: {
-    name: { type: String, default: '' },
-    gender: { type: String, default: '' },
+    appearname: { type: String, default: '' },
+    username: { type: String, default: '' },
+    type: { type: String, default: '' },
+    bio: { type: String, default: '' },
+    starrate: { type: String, default: '' },
     location: { type: String, default: '' },
-    website: { type: String, default: '' },
-    picture: { type: String, default: '' }
+    from: { type: String, default: '' },
+    address: { type: String, default: '' },
+    starrate: { type: Number, default: '' },
+    profileimage: { type: String, default: '' },
+    categories: {type: String, deault:''}
+
+  },
+  uploadPhotos: [{type: mongoose.Schema.ObjectId , ref: 'Photo' }],
+  map: {
+    lat: {type: Number, default:''},
+    long: {type: Number, default: ''}
   }
 }, { timestamps: true });
 

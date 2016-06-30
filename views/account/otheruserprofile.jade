@@ -1,34 +1,36 @@
 extends ../layout
 
 block content
+  link(rel='stylesheet', type='text/css', href='../css/lib/slick.css')
   .profile-page
     .row
       .col-sm-3
-        img( src="#{user.profile.profileimage}",class="circle" ,width='200', height='200')
+        img( src="../"+"#{otheruser.profile.profileimage}",class="circle" ,width='200', height='200')
       .col-sm-5
-        h3 #{user.profile.appearname}
-        h4.bio #{user.profile.bio}
+        h3 #{otheruser.profile.appearname}
+        h4.bio #{otheruser.profile.bio}
       .col-sm-4
-        h4 #{user.profile.location}
-        h5 #{user.profile.categories}
-        h6.long.hidden #{user.map.long}
-        h6.lat.hidden #{user.map.lat}
-        h6.id.hidden #{user._id}
+        h4 #{otheruser.profile.location}
+        h5 #{otheruser.profile.categories}
+        h6.long.hidden #{otheruser.map.long}
+        h6.lat.hidden #{otheruser.map.lat}
+        h6.id.hidden #{otheruser._id}
 
 
     section
       section.regular
 
-        - for(var i=0; i<imagesarray.length; i+=2) {
+        - for(var i=0; i<otheruser.uploadPhotos.length; i+=2) {
           div
-            if (imagesarray[i].image)
-              img(src=imagesarray[i].image)
-            -if (imagesarray[i+1])
-              img(src=imagesarray[i+1].image)
+            if (otheruser.uploadPhotos[i].image)
+              img(src="../"+otheruser.uploadPhotos[i].image)
+            -if (otheruser.uploadPhotos[i+1])
+              img(src="../"+otheruser.uploadPhotos[i+1].image)
         - }
 
   section
   #map
+
 
 
 
@@ -60,5 +62,4 @@ block content
     }
 
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyB1_QSC1MHBWdON8G3NICbfuaMXpM1RsNM&callback=initMap', async='', defer='')
-
 

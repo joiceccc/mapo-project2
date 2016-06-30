@@ -1,8 +1,20 @@
+var express = require('express');
+var bodyParser = require('body-parser');
 const async = require('async');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
+const path = require('path');
+const fs = require('fs');
+const config = require('../config/config.js');
+const mongoose = require('mongoose');
+
+
+const guid = require('guid');
+var uuid = require('node-uuid');
+const Photo = require('../models/Photo');
 const User = require('../models/User');
+var uploadedphotos = []
 
 /**
  * GET /login
@@ -54,6 +66,7 @@ exports.postLogin = (req, res, next) => {
 exports.logout = (req, res) => {
   req.logout();
   res.redirect('/');
+  var uploadedphotos = []
 };
 
 /**
@@ -114,16 +127,51 @@ exports.postSignup = (req, res, next) => {
 exports.getAccount = (req, res) => {
   res.render('account/settings', {
     title: 'Account Management'
+
   });
 };
 
 //profile profile
 exports.getProfile = (req, res) => {
-  res.render('account/profile', {
-    title: 'Your Profile'
-  });
-};
+   Photo.find({'belongstonameId': req.user.id}, function(err,photos){
+      if (err) console.log(err);
+      console.log(photos);
+      uploadedphotos = photos
+      console.log("image url")
 
+
+       res.render('account/profile', {
+        title: 'Your Profile',
+        imagesarray: uploadedphotos
+         });
+    });
+
+
+
+};
+/////
+
+var otheruserprofile = ""
+
+///
+exports.getOtherUserProfile = (req, res) => {
+console.log(req.params.userid);
+    User.findOne({'_id':req.params.userid}).populate('uploadPhotos')
+     .exec(function (err, user) {
+      if (err) console.log('fail');
+      console.log(user.profile.bio);
+      otheruserprofile = user
+
+       res.render('account/otheruserprofile', {
+         title: 'NAME',
+         otheruser : otheruserprofile
+       });
+
+
+ })
+
+};
+/////
 exports.uploadImg = (req, res) => {
   res.render('account/upload', {
     title: 'Upload'
@@ -135,12 +183,72 @@ exports.inbox = (req, res) => {
     title: 'inbox'
   });
 };
-
+var usersdata = []
 exports.goSearch = (req, res) => {
-  res.render('account/search', {
-    title: 'Search Pages'
-  });
+  User.find({'profile.categories': req.params.categories})
+            .populate('uploadPhotos')
+            .exec(function(error, posts) {
+              usersdata = posts
+
+   res.render('account/search', {
+     title: 'Search Pages',
+     categories: req.params.categories,
+     data: usersdata
+    });
+
+
+
+            });
+
+
 };
+
+var searchTagsArray = []
+var matchedphotos = []
+///// search multiple tags
+
+exports.goSearchTags = (req, res) => {
+
+  var tagsstring = req.params.tags;
+  searchTagsArray = tagsstring.split(', ');
+  console.log(searchTagsArray);
+
+  // if(!req.params.location){
+  //   var location = "*";
+  // }else{
+  //   var location = req.params.loction
+  // }
+
+  // if(!req.params.type){
+  //   var type = "*";
+  // }else{
+  //   var type = req.params.type
+  // }
+
+
+
+
+
+  Photo.find({ tags: { "$all" : searchTagsArray } }).populate('belongstouserid').exec(function(err, photos) {
+    console.log(photos.length);
+     matchedphotos = photos;
+     console.log(matchedphotos);
+     // console.log(matchedphotos[0].belongstouserid.profile)
+    // console.log(matchedphotos[0].belongstouserid)
+
+      res.render('account/searchtags', {
+        title: 'Search Tags',
+        tagsarray: searchTagsArray,
+        photos : matchedphotos
+      });
+  })
+
+
+
+};
+
+// get photo post by user
+
 
 
 /**
@@ -161,10 +269,11 @@ exports.postUpdateProfile = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.email = req.body.email || '';
-    user.profile.name = req.body.name || '';
+    user.profile.appearname = req.body.name || '';
     user.profile.gender = req.body.gender || '';
     user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
+    user.profile.bio = req.body.bio || '';
+    user.profile.categories = req.body.categories || '';
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {
@@ -174,6 +283,131 @@ exports.postUpdateProfile = (req, res, next) => {
         return next(err);
       }
       req.flash('success', { msg: 'Profile information has been updated.' });
+      res.redirect('/account');
+    });
+  });
+};
+
+// POST / account/ profile
+// Update Profile Image
+
+exports.postUploadProfileImage = (req, res, next) => {
+  console.log(req.file);
+  User.findById(req.user.id, (err, user) => {
+
+    var tempPath = req.file.path,
+        relativepath = 'uploads/' + req.user._id + '.png';
+        targetPath = config.rootPath + 'public/' + relativepath;
+
+    if (path.extname(req.file.originalname).toLowerCase() === '.png' || path.extname(req.file.originalname).toLowerCase() === '.jpg') {
+      fs.rename(tempPath, targetPath, function(err) {
+        if (err) throw err;
+        req.user.profile.profileimage = relativepath;
+        req.user.save((err) => {
+          if (err) {
+            req.flash('errors', { msg: 'Something went wrong' });
+            return res.redirect('/account');
+          }
+
+          res.redirect('/account');
+        });
+      });
+    } else {
+      fs.unlink(tempPath, function () {
+        if (err) throw err;
+        console.error("Only .png files are allowed!");
+      });
+    }
+  });
+};
+
+// POST IMAGE
+var tagsarray = [];
+exports.postUploadImage = (req, res, next) => {
+  console.log(req.file);
+  console.log(req.body.showntags);
+  var tagsstring = req.body.showntags
+  tagsarray = tagsstring.split(',')
+  console.log(tagsarray);
+  User.findById(req.user._id, (err, user) => {
+
+    console.log(uuid.v1());
+    // console.log(req.body.tags)
+    var unique = uuid.v1()
+
+    var tempPath = req.file.path,
+        relativepath = 'uploads/' + "image" + unique +'.png';
+        targetPath = config.rootPath + 'public/' + relativepath;
+
+    var fileExtension = path.extname(req.file.originalname).toLowerCase();
+
+
+    if ( fileExtension === '.png' || fileExtension === '.jpg') {
+      fs.rename(tempPath, targetPath, function(err) {
+        if (err) throw err;
+
+        var photo = new Photo({
+          image: relativepath,
+          belongstoname: req.user.appearname,
+          belongstouserid: req.user._id,
+          belongstonameId: req.user._id,
+          tags:tagsarray
+
+        });
+
+        photo.save((err) => {
+          if (err) {
+            req.flash('errors', { msg: 'Something went wrong' });
+            return res.redirect('/profile');
+          }
+
+          req.user.uploadPhotos.push(photo);
+
+          req.user.save((err) => {
+            if (err) {
+              req.flash('errors', { msg: 'Something went wrong usersave' });
+            }
+
+            res.redirect('/profile');
+          });
+        });
+      });
+    } else {
+      fs.unlink(tempPath, function () {
+        if (err) {
+          req.flash('errors', { msg: "Only .png files are allowed!" });
+        }
+        res.redirect('/profile');
+      });
+    }
+  });
+};
+////////add location/////////
+
+exports.postUpdateLocation = (req, res, next) => {
+
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/account');
+  }
+
+  User.findById(req.user.id, (err, user) => {
+    if (err) { return next(err); }
+
+    req.user.map.lat = req.body.lat;
+    req.user.map.long = req.body.long;
+    req.user.save((err) => {
+      if (err) {
+        if (err.code === 11000) {
+          req.flash('errors', { msg: 'error location' });
+          return res.redirect('/account');
+        }
+        return next(err);
+      }
+      req.flash('success', { msg: 'Location has been updated.' });
       res.redirect('/account');
     });
   });
@@ -396,3 +630,17 @@ exports.postForgot = (req, res, next) => {
     res.redirect('/forgot');
   });
 };
+
+// var foundtags = 0
+// for(i = 0 ; i < searchtags.length ; i++) {
+// var totaltags = searchtags.length
+
+
+// for (n = 0 ; n < alltags.length ; n++) {
+//     if (searchtags[i] === alltags[n]) {
+//     foundtags++
+//     if (foundtags === totaltags) {
+//      console.log ("match");
+//      break
+//     }} }
+// }

@@ -5,11 +5,23 @@ header.main {
 
 section.main-content {
 
+
   margin-top: 100px;
-  left: 35%;
+  margin: auto;
+
 
 
 }
+
+section.right{
+  left: 50%;
+}
+ #map {
+      height: 400px;
+      width: 700px;
+      margin: auto;      }
+}
+
 
 .row.categories{
   width: 950px;
@@ -21,17 +33,24 @@ section.main-content {
 
 }
 
-#search-bar {
+.search-bar {
+
   width: 300px;
-  margin-left : 36%;
+ right: 500px;
 }
 
-section.cate-type {
+
+
+
+/*section.cate-type {
   left: 10%;
-}
+}*/
 
 .circle {
   border-radius: 100%;
+  border-style: solid;
+  border-color: white;
+  border-width: 1px;
 }
 
 .profile-page {
@@ -41,7 +60,8 @@ section.cate-type {
 }
 .bio {
   margin-top: 30px;
-  margin-left: 200px;
+  margin-left: 100px;
+  width: 400px;
 }
 
 * {
@@ -62,6 +82,11 @@ body {
 
 }
 
+.search-page{
+  width: 1000px;
+  margin-left: 60px;
+}
+
 .margintop  {
   margin-top: 50px;
 }
@@ -69,4 +94,114 @@ body {
 .mapo-home-img {
 position: relative;
 left: 40%;
+}
+
+.roundtags {
+  background-color: #66b2ff;
+  color: white;
+  border-radius: 30px;
+  width: 100px;
+}
+
+ #mapsearch {
+  height: 500px;
+  width: 500px;
+
+}
+
+.searchtags-img {
+
+  padding: 1px;
+
+}
+
+.eachphoto {
+border-style: solid;
+border-color: #D3D3D3;
+padding: 3px;
+border-width: 1px;
+width: 257px;
+height: 300px;
+display: inline-block;
+margin:5px;
+
+}
+
+
+
+.propic-tags {
+position: relative;
+bottom: 20px;
+left:20px;
+
+}
+
+.searchtags-name{
+  position: relative;
+  bottom: 55px;
+  left: 80px;
+}
+
+.searchtags-location{
+  position: relative;
+  bottom: 55px;
+  left: 170px;
+}
+
+
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#pac-input {
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 300px;
+}
+
+#pac-input:focus {
+  border-color: #4d90fe;
+}
+
+.pac-container {
+  font-family: Roboto;
+}
+
+#type-selector {
+  color: #fff;
+  background-color: #4d90fe;
+  padding: 5px 11px 0px 11px;
+}
+
+#type-selector label {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.search-bar-home {
+
+width: 400px;
+}
+
+div.tokenfield.form-control {
+  position: absolute;
+margin-left: 260px;
+}
+
+.home-search {
+  position: absolute;
+margin-left: 680px;
 }

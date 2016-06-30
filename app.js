@@ -3,6 +3,7 @@
  */
 const express = require('express');
 const compression = require('compression');
+const fs = require('fs');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
@@ -13,12 +14,14 @@ const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
 const path = require('path');
 const mongoose = require('mongoose');
+const guid = require('guid');
 const passport = require('passport');
 const expressValidator = require('express-validator');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
-const fs = require('fs');
+const upload = multer({ dest: path.join(__dirname, '/public/uploads') });
+const config = require('./config/config.js');
+var uuid = require('node-uuid');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -64,6 +67,7 @@ app.use(sass({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public')
 }));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -77,11 +81,17 @@ app.use(session({
     autoReconnect: true
   })
 }));
+
+app.use(function(req,res,next){
+  console.log(req.method + " " + req.path);
+  next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if (req.path === '/api/upload' || req.path === '/account/profileimage' || req.path === '/upload/image') {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -119,13 +129,31 @@ app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
 app.get('/profile', passportConfig.isAuthenticated, userController.getProfile);
+app.get('/user/:userid', passportConfig.isAuthenticated, userController.getOtherUserProfile);
+
+
 app.get('/upload', passportConfig.isAuthenticated, userController.uploadImg);
+
 app.get('/inbox', passportConfig.isAuthenticated, userController.inbox);
-app.get('/search', passportConfig.isAuthenticated, userController.goSearch);
+app.get('/search/:categories', passportConfig.isAuthenticated, userController.goSearch);
+
+app.get('/searchtags/:tags', passportConfig.isAuthenticated, userController.goSearchTags);
+// app.get('/searchtags/:tags/:location', passportConfig.isAuthenticated, userController.goSearchTags);
+// app.get('/searchtags/:tags/:location/:type', passportConfig.isAuthenticated, userController.goSearchTags);
+
+// all // individual //
+
+//app.get('/search/:categories', passportConfig.isAuthenticated, userController.goSearch);
+
+
 
 app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
+app.post('/account/profileimage', passportConfig.isAuthenticated, upload.single('avatar'), userController.postUploadProfileImage);
+app.post('/account/location', passportConfig.isAuthenticated, userController.postUpdateLocation);
+app.post('/upload/image', passportConfig.isAuthenticated, upload.single('photo'), userController.postUploadImage);
+
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
 /**

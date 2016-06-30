@@ -8,9 +8,12 @@ html
     meta(name='csrf-token', content=_csrf)
     title #{title} - Hackathon Starter
     link(rel='shortcut icon', href='/favicon.png')
-    link(rel='stylesheet', href='/css/main.css')
-    link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', type='text/css', href='css/lib/slick.css')
+    link(rel='stylesheet', href='/css/main.css')
+    link(rel='stylesheet', type='text/css', href='/css/lib/bootstrap-tokenfield.css')
+    link(rel='stylesheet', href='/css/style.css')
+
+
     //- link(rel='stylesheet', type='text/css', href='css/lib/slick-theme.css')
     script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
     link(href='http://getbootstrap.com/dist/css/bootstrap.min.css', rel='stylesheet')
@@ -31,6 +34,7 @@ html
     script(src='/js/lib/bootstrap.min.js')
     script(src='/js/main.js')
     script(src='/js/lib/slick.min.js')
+    script(src='/js/lib/bootstrap-tokenfield.js')
 
     // Google Analytics: change UA-XXXXX-X to be your site's ID
     script.

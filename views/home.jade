@@ -2,32 +2,57 @@ extends layout
 
 block content
   header.main
+    script(src='/js/lib/bootstrap-tokenfield.js')
     section.main-content
       img( src="../mapo plain.png",class="mapo-home-img" , width='200', height='200')
       h1.center MAPO
       p.lead.center Discover your local area.
-      input#search-bar.form-control.center(type='keywords', placeholder='Add tags...')
+      section
+    input#tokenfield.search-bar-home.center(type='text',placeholder= "Enter tags to narrow your search , etc coffee, chill" , value='')
+    button.btn.btn.btn.btn-info.home-search(id = "search-tags")
+            | Search
 
   section.cate-type
     .row.categories
       .col-md-4.col-sm-6
-        img( src="../arty.jpg", width='300', height='300')
+        a(href='/search/art')
+          img( src="../arty.jpg", width='300', height='300')
         h5.center ART
 
       .col-md-4.col-sm-6
-        img( src="../greenspace newcatttttt.jpg", width='300', height='300')
-        h5.center GREENSPACE
+        a(href='/search/cafe')
+          img( src="../greenspace newcatttttt.jpg", width='300', height='300')
+        h5.center CAFE
       .col-md-4.col-sm-6
-        img( src="../outfitss.jpg", width='300', height='300')
+        a(href='/search/outfit')
+          img( src="../outfitss.jpg", width='300', height='300')
         h5.center OUTFIT
     .row.categories
       .col-md-4.col-sm-6
-        img( src="../chill catttt.jpg", width='300', height='300')
+        a(href='/search/chill')
+          img( src="../chill catttt.jpg", width='300', height='300')
         h5.center CHILL
 
       .col-md-4.col-sm-6
-        img( src="../outfit catttt.jpg", width='300', height='300')
+        a(href='/search/acessories')
+          img( src="../outfit catttt.jpg", width='300', height='300')
         h5.center AACESSORIES
       .col-md-4.col-sm-6
-        img( src="../learn.jpg", width='300', height='300')
+        a(href='/search/class')
+          img( src="../learn.jpg",href='/search',  width='300', height='300')
         h5.center CLASSES
+  script.
+    $('#tokenfield').tokenfield({
+
+      showAutocompleteOnFocus: true
+      })
+
+     $(function () {
+
+    });
+
+     $('#search-tags').click(function(e){
+        var tagsString = $('#tokenfield').val();
+        console.log(tagsString);
+        window.location.href = "/searchtags/" + tagsString;
+    });

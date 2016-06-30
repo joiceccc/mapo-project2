@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+  header
+    link(rel='stylesheet', type='text/css', href='../css/lib/slick.css')
+    link(rel='stylesheet', type='text/css', href='../css/lib/slick-theme.css')
+    .row
+      h1.tagsarray.center.col-sm-8 #{tagsarray}
+      .col-sm-4
+        input.tagsvalue(type='text', id='', placeholder= 'Add Tags...')
+        button#searchtags-addtags.btn.btn-info
+          | Add tags
+    .search-page
+      section.tagsblock
+
+
+          - for(var i=0; i<photos.length; i++) {
+            .eachphoto
+              a(href='/user/'+'#{photos[i].belongstonameId}')
+                img(src="../"+"#{photos[i].image}", height="250", width="250", class= "searchtags-img")
+              img(src="../"+"#{photos[i].belongstouserid.profile.profileimage}", height="50", width="50", class= "circle propic-tags")
+              h6.searchtags-name #{photos[i].belongstouserid.profile.appearname}
+              h6.searchtags-location #{photos[i].belongstouserid.profile.location}
+          - }
+
+  script.
+    $(function () {
+
+    });
+
+    $('#searchtags-addtags').click(function(e){
+      console.log('add tags');
+      e.preventDefault();
+     console.log($('.tagsarray').text());
+        var newtag = $('.tagsvalue').val();
+        console.log(newtag)
+     var currenttags =    $('.tagsarray').text().split(",").join(", ")
+     console.log(currenttags);
+      var newtags = currenttags + (", "+ newtag)
+      console.log(newtags);
+      window.location.href = "/searchtags/" + newtags;
+    });
