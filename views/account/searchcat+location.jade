@@ -2,19 +2,20 @@ extends ../layout
 
 block content
   header
-    link(rel='stylesheet', type='text/css', href='../css/lib/slick.css')
-    link(rel='stylesheet', type='text/css', href='../css/lib/slick-theme.css')
+    link(rel='stylesheet', type='text/css', href='../../css/lib/slick.css')
+    link(rel='stylesheet', type='text/css', href='../../css/lib/slick-theme.css')
     .row
       .col-sm-3
+        h1.hidden.searchcatlocation #{location}
       .col-sm-2
         a(href='/search/#{tagsstring}/#{searchlocation || "all"}/individual')
-          img(src="../yellowpeople.png", height="35", width="35")
+          img(src="../../yellowpeople.png", height="35", width="35")
         a(href='/search/#{tagsstring}/#{searchlocation || "all"}/upstairs')
-          img(src="../buildingblue.png", height="30", width="30")
+          img(src="../../buildingblue.png", height="30", width="30")
         a(href='/search/#{tagsstring}/#{searchlocation || "all"}/grounds')
-          img(src="../redshop.png", height="30", width="30")
+          img(src="../../redshop.png", height="30", width="30")
       .col-sm-4
-        buttons.btn.btn-default.searchcatlocation-all.btn-info
+        buttons.btn.btn-default.searchcatlocation-all
           | ALL
          buttons.btn.btn-default.searchcatlocation-kow
           | KOWLOON
@@ -30,7 +31,7 @@ block content
         - for(var i=0; i<data.length; i++) {
           section.row
             section.col-sm-2
-              img( src="../"+data[i].profile.profileimage
+              img( src="../../"+data[i].profile.profileimage
                 ,class="circle" ,width='100', height='100')
               h3 #{data[i].profile.appearname}
               h6.center #{data[i].profile.bio}
@@ -38,7 +39,7 @@ block content
               h6 #{data[i].uploadPhotos.length}
             section.regular.col-sm-10
               - for(var n=0; n<data[i].uploadPhotos.length; n++){
-                  img(src="../"+data[i].uploadPhotos[n].image,width='300', height='300')
+                  img(src="../../"+data[i].uploadPhotos[n].image,width='300', height='300')
               -}
         - }
 
@@ -50,13 +51,29 @@ block content
         slidesToShow:3,
         slidesToScroll: 3
       });
-    });
 
-     var categories = $('.categories').text();
+    var location = $('.searchcatlocation').text()
+    console.log(location);
+    if (location === "newterr") {
+      $('.searchcatlocation-newterr').addClass( "btn-info" )
+    } else if (location === "kow") {
+       $('.searchcatlocation-kow').addClass( "btn-info" )
+    } else if (location === "hkis") {
+       $('.searchcatlocation-hkis').addClass( "btn-info" )
+    } else if (location === "all") {
+       $('.searchcatlocation-all').addClass( "btn-info" )
+    }
+
+
+
+
+
+    });
+    var categories = $('.categories').text();
     $('.searchcatlocation-all').click(function(e){
 
         console.log('search all');
-        window.location.href = "/search"
+        window.location.href = "/search/"+ categories
       });
 
     $('.searchcatlocation-hkis').click(function(e){
@@ -73,6 +90,5 @@ block content
         console.log('search new terr');
          window.location.href = "/search/"+ categories +"/newterr"
       });
-
 
 

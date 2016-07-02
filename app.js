@@ -137,6 +137,8 @@ app.get('/upload', passportConfig.isAuthenticated, userController.uploadImg);
 app.get('/inbox', passportConfig.isAuthenticated, userController.inbox);
 app.get('/search/:categories', passportConfig.isAuthenticated, userController.goSearch);
 
+app.get('/search/:categories/:location', passportConfig.isAuthenticated, userController.goSearchCatLocations);
+
 app.get('/searchtags/:tags', passportConfig.isAuthenticated, userController.goSearchTags);
  app.get('/searchtags/:tags/:location', passportConfig.isAuthenticated, userController.goSearchLocations);
 app.get('/searchtags/:tags/:location/:type', passportConfig.isAuthenticated, userController.goSearchType);

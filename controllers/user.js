@@ -203,6 +203,31 @@ exports.goSearch = (req, res) => {
 
 };
 
+
+////////////////////////////////////////goSearchCatLocations
+exports.goSearchCatLocations = (req, res) => {
+  console.log(req.params.location)
+  User.find( {'profile.district':{ "$in" : req.params.location}} )
+            .populate('uploadPhotos')
+            .exec(function(error, posts) {
+              usersdata = posts
+              console.log(usersdata);
+
+   res.render('account/searchcat+location', {
+     title: 'Search Pages',
+     categories: req.params.categories,
+     data: usersdata,
+     location: req.params.location
+    });
+
+
+
+            });
+
+
+};
+
+
 var searchTagsArray = []
 var matchedphotos = []
 ///// search multiple tags
@@ -240,6 +265,7 @@ exports.goSearchLocations = (req, res) => {
   console.log(searchTagsArray);
 
   var searchlocation = req.params.location;
+
     if (searchlocation === "all") {
 
        Photo.find({ tags: { "$all" : searchTagsArray }}).populate('belongstouserid').exec(function(err, photos) {
@@ -356,6 +382,8 @@ exports.postUpdateProfile = (req, res, next) => {
     user.profile.location = req.body.location || '';
     user.profile.bio = req.body.bio || '';
     user.profile.categories = req.body.categories || '';
+
+    user.profile.type = req.body.type
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {
@@ -483,6 +511,7 @@ exports.postUpdateLocation = (req, res, next) => {
 
     req.user.map.lat = req.body.lat;
     req.user.map.long = req.body.long;
+    req.user.profile.district = req.body.district;
     req.user.save((err) => {
       if (err) {
         if (err.code === 11000) {
