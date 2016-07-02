@@ -6,11 +6,11 @@ block content
     link(rel='stylesheet', type='text/css', href='../css/lib/slick-theme.css')
     .row
       .col-sm-2
-        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/individual')
+        a(href='/searchtags/#{tagsstring}/#{searchlocation || "all"}/individual')
           img(src="../../yellowpeople.png", height="35", width="35")
-        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/upstairs')
+        a(href='/searchtags/#{tagsstring}/#{searchlocation || "all"}/upstairs')
           img(src="../../buildingblue.png", height="30", width="30")
-        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/grounds')
+        a(href='/searchtags/#{tagsstring}/#{searchlocation || "all"}/grounds')
           img(src="../../redshop.png", height="30", width="30")
       h1.tagsarray.center.col-sm-4 #{tagsarray}
       h6.searchlocation #{searchlocation || "all"}

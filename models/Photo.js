@@ -10,6 +10,7 @@ const photoSchema = new mongoose.Schema({
   categories: String,
   image: String,
   userdistrict : String,
+  usertype:String,
   belongstouserid : {type: mongoose.Schema.ObjectId , ref: 'User' },
 
 

@@ -223,7 +223,8 @@ exports.goSearchTags = (req, res) => {
       res.render('account/searchtags', {
         title: 'Search Tags',
         tagsarray: searchTagsArray,
-        photos : matchedphotos
+        photos : matchedphotos,
+        tagsstring:tagsstring
       });
   })
 
@@ -252,7 +253,8 @@ exports.goSearchLocations = (req, res) => {
         title: 'Search Tags',
         tagsarray: searchTagsArray,
         photos : matchedphotos,
-        searchlocation: searchlocation
+        searchlocation: searchlocation,
+        tagsstring:tagsstring
       });
   })
 
@@ -268,7 +270,8 @@ exports.goSearchLocations = (req, res) => {
         title: 'Search Tags',
         tagsarray: searchTagsArray,
         photos : matchedphotos,
-        searchlocation: searchlocation
+        searchlocation: searchlocation,
+        tagsstring:tagsstring
       });
   })
 
@@ -288,7 +291,7 @@ exports.goSearchType = (req, res) => {
   var type = req.params.type;
     if (searchlocation === "all") {
 
-       Photo.find({ tags: { "$all" : searchTagsArray }}).populate('belongstouserid').exec(function(err, photos) {
+       Photo.find({ tags: { "$all" : searchTagsArray }, usertype: { "$in" : type }}).populate('belongstouserid').exec(function(err, photos) {
     console.log(photos.length);
      matchedphotos = photos;
      console.log(matchedphotos);
@@ -301,12 +304,13 @@ exports.goSearchType = (req, res) => {
         tagsarray: searchTagsArray,
         photos : matchedphotos,
         searchlocation: searchlocation,
-        type:type
+        type:type,
+        tagsstring:tagsstring
       });
   })
 
     } else {
- Photo.find({ tags: { "$all" : searchTagsArray },  userdistrict: { "$in" : searchlocation } }).populate('belongstouserid').exec(function(err, photos) {
+ Photo.find({ tags: { "$all" : searchTagsArray },  userdistrict: { "$in" : searchlocation }, usertype: { "$in" : type } }).populate('belongstouserid').exec(function(err, photos) {
     console.log(photos.length);
      matchedphotos = photos;
      console.log(matchedphotos);
@@ -318,7 +322,8 @@ exports.goSearchType = (req, res) => {
         tagsarray: searchTagsArray,
         photos : matchedphotos,
         searchlocation: searchlocation,
-        type: type
+        type: type,
+        tagsstring:tagsstring
       });
   })
 
@@ -425,10 +430,12 @@ exports.postUploadImage = (req, res, next) => {
 
         var photo = new Photo({
           image: relativepath,
-          belongstoname: req.user.appearname,
+          belongstoname: req.user.profile.appearname,
           belongstouserid: req.user._id,
           belongstonameId: req.user._id,
-          tags:tagsarray
+          tags:tagsarray,
+          userdistrict: user.profile.district,
+          usertype:req.user.profile.type,
 
         });
 
