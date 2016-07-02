@@ -138,7 +138,8 @@ app.get('/inbox', passportConfig.isAuthenticated, userController.inbox);
 app.get('/search/:categories', passportConfig.isAuthenticated, userController.goSearch);
 
 app.get('/searchtags/:tags', passportConfig.isAuthenticated, userController.goSearchTags);
-// app.get('/searchtags/:tags/:location', passportConfig.isAuthenticated, userController.goSearchTags);
+ app.get('/searchtags/:tags/:location', passportConfig.isAuthenticated, userController.goSearchLocations);
+app.get('/searchtags/:tags/:location/:type', passportConfig.isAuthenticated, userController.goSearchType);
 // app.get('/searchtags/:tags/:location/:type', passportConfig.isAuthenticated, userController.goSearchTags);
 
 // all // individual //

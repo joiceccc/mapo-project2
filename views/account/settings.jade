@@ -15,16 +15,16 @@ block content
       .col-sm-7
         input.form-control(type='text', name='name', id='name', value='#{user.profile.appearname}')
     .form-group
-      label.col-sm-3.control-label(for='gender') Type of provider
+      label.col-sm-3.control-label(for='type') Type of provider
       .col-sm-6
         label.radio.col-sm-3
           input(type='radio', checked=user.profile.type=='grounds', name='type', value='grounds', data-toggle='radio')
           span Grounds
         label.radio.col-sm-3
-          input(type='radio', checked=user.profile.gender=='upstairs', name='type', value='upstairs', data-toggle='radio')
+          input(type='radio', checked=user.profile.type=='upstairs', name='type', value='upstairs', data-toggle='radio')
           span Upstairs
         label.radio.col-sm-3
-          input(type='radio', checked=user.profile.gender=='individual', name='individual', value='individual', data-toggle='radio')
+          input(type='radio', checked=user.profile.type=='individual', name='individual', value='individual', data-toggle='radio')
           span Individual
     .form-group
       label.col-sm-3.control-label(for='location') District
@@ -58,7 +58,7 @@ block content
     h3 Set location
     input#pac-input.controls(type='text', placeholder='Enter a location')
     #type-selector.controls
-    #map
+    #map #{user.profile.district}
     button.btn.btn.btn-primary.updateLocation(type='submit')
         | Edit Your Location
 
@@ -132,6 +132,7 @@ block content
     console.log("hello");
     var lat = 0;
     var long = 0;
+    var district = ""
     var csrfToken = $("meta[name='csrf-token']").attr("content");
 
 
@@ -165,7 +166,8 @@ block content
       console.log('change location');
       e.preventDefault();
       console.log(lat + "," + long)
-       $.post( '/account/location', {'lat': lat, 'long': long, '_csrf' : $("meta[name='csrf-token']").attr("content")}, function( data){
+        console.log("district" + district)
+       $.post( '/account/location', {'lat': lat, 'long': long,'district': district, '_csrf' : $("meta[name='csrf-token']").attr("content")}, function( data){
           console.log("updated.")
 
 
@@ -210,13 +212,36 @@ block content
       map.setCenter(place.geometry.location);
        lat = place.geometry.location.lat();
        long = place.geometry.location.lng();
-       ////////////////////////////getttt api ////////////////////////////////////////
-        $.getJSON("http://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+ lat+"&sensor=true",
+
+      console.log(lat + "," + long)
+        ////////////////////////////getttt api ////////////////////////////////////////
+        $.getJSON("http://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+ long +"&sensor=true",
      function(data){
        console.log(data);
+       console.log(data.results[0].address_components[2].long_name)
+       console.log(data.results[0].address_components[3].long_name)
+
+        if (data.results[0].address_components[2].long_name === "New Territories") {
+          console.log("its new Territories")
+          district = "newterr"
+          }else if (data.results[0].address_components[2].long_name === "Kowloon") {
+          console.log("its kowlooon")
+          district = "kow"
+          }else if (data.results[0].address_components[3].long_name === "Kowloon"){
+            console.log("its kowlooon")
+          district = "kow"
+          }else if (data.results[0].address_components[3].long_name === "New Territories") {
+          console.log("its newterr")
+          district = "newterr"
+          } else {
+
+          console.log("its hk island")
+
+          district = "hkis"
+          }
+
      })
         /////////////////////////////////////////////////////////////////////////////////////////
-      console.log(lat + "," + long)
       map.setZoom(17);  // Why 17? Because it looks good.
       }
       marker.setIcon(/** @type {google.maps.Icon} */({

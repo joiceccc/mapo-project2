@@ -1,0 +1,96 @@
+extends ../layout
+
+block content
+  header
+    link(rel='stylesheet', type='text/css', href='../css/lib/slick.css')
+    link(rel='stylesheet', type='text/css', href='../css/lib/slick-theme.css')
+    .row
+      .col-sm-2
+        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/individual')
+          img(src="../../yellowpeople.png", height="35", width="35")
+        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/upstairs')
+          img(src="../../buildingblue.png", height="30", width="30")
+        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/individual')
+          img(src="../../redshop.png", height="30", width="30")
+      h1.tagsarray.center.col-sm-4 #{tagsarray}
+      h6.searchlocation #{searchlocation || "all"}
+
+      .col-sm-2
+        input.tagsvalue(type='text', id='', placeholder= 'Add Tags...')
+        button#searchtags-addtags.btn.btn-info
+          | Add tags
+      .col-sm-4
+        buttons.btn.btn-default.all
+          | ALL
+        buttons.btn.btn-default.kow
+          | KOWLOON
+        buttons.btn.btn-default.hkis
+          | HK ISLAND
+        buttons.btn.btn-default.newterr
+          | NEW TERR
+
+    .search-page
+      section.tagsblock
+
+
+          - for(var i=0; i<photos.length; i++) {
+            .eachphoto
+              a(href='/user/'+'#{photos[i].belongstonameId}')
+                img(src="../../../"+"#{photos[i].image}", height="250", width="250", class= "searchtags-img")
+              img(src="../../../"+"#{photos[i].belongstouserid.profile.profileimage}", height="50", width="50", class= "circle propic-tags")
+              h6.searchtags-name #{photos[i].belongstouserid.profile.appearname}
+              h6.searchtags-location #{photos[i].belongstouserid.profile.location}
+          - }
+
+  script.
+    $(function () {
+    var location = $('.searchlocation').text()
+    console.log(location);
+    if (location === "newterr") {
+      $('.newterr').addClass( "btn-info" )
+    } else if (location === "kow") {
+       $('.kow').addClass( "btn-info" )
+    } else if (location === "hkis") {
+       $('.hkis').addClass( "btn-info" )
+    } else if (location === "all") {
+       $('.all').addClass( "btn-info" )
+    }
+
+    });
+    var tags = $('.tagsarray').text()
+    $('#searchtags-addtags').click(function(e){
+      console.log('add tags');
+      e.preventDefault();
+     console.log($('.tagsarray').text());
+        var newtag = $('.tagsvalue').val();
+        console.log(newtag)
+     var currenttags =    $('.tagsarray').text().split(",").join(", ")
+     console.log(currenttags);
+      var newtags = currenttags + (", "+ newtag)
+      console.log(newtags);
+      window.location.href = "/searchtags/" + newtags;
+    });
+
+      $('.all').click(function(e){
+           e.stopPropagation();
+          console.log('search all');
+          window.location.href = "/searchtags/"+ tags +"/all"
+        });
+
+      $('.kow').click(function(e){
+            e.stopPropagation();
+          console.log('search kowloon');
+          window.location.href = "/searchtags/"+ tags +"/kow"
+        });
+
+       $('.hkis').click(function(e){
+            e.stopPropagation();
+          console.log('search hk island');
+          window.location.href = "/searchtags/"+ tags +"/hkis"
+        });
+
+      $('.newterr').click(function(e){
+            e.stopPropagation()
+            console.log('search new terr');
+            window.location.href = "/searchtags/"+ tags +"/newterr"
+          });

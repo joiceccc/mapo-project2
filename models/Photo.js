@@ -9,6 +9,7 @@ const photoSchema = new mongoose.Schema({
   //creator: {type: mongoose.Schema.ObjectId , ref: 'User' },
   categories: String,
   image: String,
+  userdistrict : String,
   belongstouserid : {type: mongoose.Schema.ObjectId , ref: 'User' },
 
 

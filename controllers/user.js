@@ -213,23 +213,7 @@ exports.goSearchTags = (req, res) => {
   searchTagsArray = tagsstring.split(', ');
   console.log(searchTagsArray);
 
-  // if(!req.params.location){
-  //   var location = "*";
-  // }else{
-  //   var location = req.params.loction
-  // }
-
-  // if(!req.params.type){
-  //   var type = "*";
-  // }else{
-  //   var type = req.params.type
-  // }
-
-
-
-
-
-  Photo.find({ tags: { "$all" : searchTagsArray } }).populate('belongstouserid').exec(function(err, photos) {
+ Photo.find({ tags: { "$all" : searchTagsArray } }).populate('belongstouserid').exec(function(err, photos) {
     console.log(photos.length);
      matchedphotos = photos;
      console.log(matchedphotos);
@@ -248,6 +232,99 @@ exports.goSearchTags = (req, res) => {
 };
 
 // get photo post by user
+exports.goSearchLocations = (req, res) => {
+
+  var tagsstring = req.params.tags;
+  searchTagsArray = tagsstring.split(', ');
+  console.log(searchTagsArray);
+
+  var searchlocation = req.params.location;
+    if (searchlocation === "all") {
+
+       Photo.find({ tags: { "$all" : searchTagsArray }}).populate('belongstouserid').exec(function(err, photos) {
+    console.log(photos.length);
+     matchedphotos = photos;
+     console.log(matchedphotos);
+     // console.log(matchedphotos[0].belongstouserid.profile)
+    // console.log(matchedphotos[0].belongstouserid)
+
+      res.render('account/searchtags+location', {
+        title: 'Search Tags',
+        tagsarray: searchTagsArray,
+        photos : matchedphotos,
+        searchlocation: searchlocation
+      });
+  })
+
+    } else {
+ Photo.find({ tags: { "$all" : searchTagsArray },  userdistrict: { "$in" : searchlocation } }).populate('belongstouserid').exec(function(err, photos) {
+    console.log(photos.length);
+     matchedphotos = photos;
+     console.log(matchedphotos);
+     // console.log(matchedphotos[0].belongstouserid.profile)
+    // console.log(matchedphotos[0].belongstouserid)
+
+      res.render('account/searchtags+location', {
+        title: 'Search Tags',
+        tagsarray: searchTagsArray,
+        photos : matchedphotos,
+        searchlocation: searchlocation
+      });
+  })
+
+}
+
+};
+
+//////go search location + type
+
+exports.goSearchType = (req, res) => {
+
+  var tagsstring = req.params.tags;
+  searchTagsArray = tagsstring.split(', ');
+  console.log(searchTagsArray);
+
+  var searchlocation = req.params.location;
+  var type = req.params.type;
+    if (searchlocation === "all") {
+
+       Photo.find({ tags: { "$all" : searchTagsArray }}).populate('belongstouserid').exec(function(err, photos) {
+    console.log(photos.length);
+     matchedphotos = photos;
+     console.log(matchedphotos);
+
+     // console.log(matchedphotos[0].belongstouserid.profile)
+    // console.log(matchedphotos[0].belongstouserid)
+
+      res.render('account/searchtags+location+type', {
+        title: 'Search Tags',
+        tagsarray: searchTagsArray,
+        photos : matchedphotos,
+        searchlocation: searchlocation,
+        type:type
+      });
+  })
+
+    } else {
+ Photo.find({ tags: { "$all" : searchTagsArray },  userdistrict: { "$in" : searchlocation } }).populate('belongstouserid').exec(function(err, photos) {
+    console.log(photos.length);
+     matchedphotos = photos;
+     console.log(matchedphotos);
+     // console.log(matchedphotos[0].belongstouserid.profile)
+    // console.log(matchedphotos[0].belongstouserid)
+
+      res.render('account/searchtags+location+type', {
+        title: 'Search Tags',
+        tagsarray: searchTagsArray,
+        photos : matchedphotos,
+        searchlocation: searchlocation,
+        type: type
+      });
+  })
+
+}
+
+};
 
 
 

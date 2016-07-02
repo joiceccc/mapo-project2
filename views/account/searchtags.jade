@@ -5,11 +5,28 @@ block content
     link(rel='stylesheet', type='text/css', href='../css/lib/slick.css')
     link(rel='stylesheet', type='text/css', href='../css/lib/slick-theme.css')
     .row
-      h1.tagsarray.center.col-sm-8 #{tagsarray}
+      .col-sm-2
+        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/individual')
+          img(src="../yellowpeople.png", height="35", width="35")
+        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/upstairs')
+          img(src="../buildingblue.png", height="30", width="30")
+        a(href='/searchtags/#{tagsarray}/#{searchlocation || "all"}/grounds')
+          img(src="../redshop.png", height="30", width="30")
+      h4.tagsarray.center.col-sm-2 #{tagsarray}
       .col-sm-4
         input.tagsvalue(type='text', id='', placeholder= 'Add Tags...')
         button#searchtags-addtags.btn.btn-info
           | Add tags
+      .col-sm-4
+        buttons.btn.btn-default.searchlocation-all.btn-info
+          | ALL
+         buttons.btn.btn-default.searchlocation-kow
+          | KOWLOON
+        buttons.btn.btn-default.searchlocation-hkis
+          | HK ISLAND
+        buttons.btn.btn-default.searchlocation-newterr
+          | NEW TERR
+
     .search-page
       section.tagsblock
 
@@ -27,7 +44,7 @@ block content
     $(function () {
 
     });
-
+    var tags = $('.tagsarray').text()
     $('#searchtags-addtags').click(function(e){
       console.log('add tags');
       e.preventDefault();
@@ -40,3 +57,29 @@ block content
       console.log(newtags);
       window.location.href = "/searchtags/" + newtags;
     });
+
+      $('.searchlocation-all').click(function(e){
+
+          console.log('search all');
+          var currenttags =    $('.tagsarray').text().split(",").join(", ")
+          console.log(currenttags);
+          window.location.href = "/searchtags/" + currenttags;
+        });
+
+      $('.searchlocation-hkis').click(function(e){
+          console.log('search hk island');
+           var currenttags =    $('.tagsarray').text().split(",").join(", ")
+           window.location.href = "/searchtags/"+ currenttags +"/hkis"
+        });
+
+      $('.searchlocation-kow').click(function(e){
+          console.log('search kowloon');
+          var currenttags =    $('.tagsarray').text().split(",").join(", ")
+           window.location.href = "/searchtags/"+ currenttags +"/kow"
+        });
+
+    $('.searchlocation-newterr').click(function(e){
+          console.log('search new terr');
+          var currenttags =    $('.tagsarray').text().split(",").join(", ")
+           window.location.href = "/searchtags/"+ currenttags +"/newterr"
+        });

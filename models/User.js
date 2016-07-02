@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
     bio: { type: String, default: '' },
     starrate: { type: String, default: '' },
     location: { type: String, default: '' },
+    district: { type: String, default: '' },
     from: { type: String, default: '' },
     address: { type: String, default: '' },
     starrate: { type: Number, default: '' },
